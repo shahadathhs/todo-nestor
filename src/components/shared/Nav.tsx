@@ -13,7 +13,7 @@ export const Nav = () => {
   return (
     <div className="flex justify-between p-2 md:px-4">
       <div>
-        <Image src="/check-circle.png" alt="logo image" width={45} height={45} />
+        <Image src="/check-circle.png" alt="logo image" width={45} height={45} className="bg-white rounded-full" />
       </div>
       <div className="flex items-center justify-center gap-2">
         <DropdownMenu>
