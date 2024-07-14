@@ -27,9 +27,13 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import { CiMenuKebab } from "react-icons/ci";
+import { FaRegEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
 import { Button } from "@/components/ui/button";
+import EditTaskModal from "./EditTaskModal";
+import Swal from 'sweetalert2'
 
 interface Task {
   id: number;
@@ -42,6 +46,7 @@ const TASKS_PER_PAGE = 5;
 export default function TaskList() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
 
   useEffect(() => {
     fetchTasks();
@@ -60,13 +65,58 @@ export default function TaskList() {
     setCurrentPage(page);
   };
 
+  const handleDelete = async (taskId: number) => {
+    try {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+      }).then(async (result: any) => {
+        if (result.isConfirmed) {
+          await axios.delete(`/todos/${taskId}`);
+          setTasks(tasks.filter(task => task.id !== taskId));
+          Swal.fire({
+            title: "Deleted!",
+            text: "Your TODO has been deleted.",
+            icon: "success"
+          });
+        }
+      });
+    } catch (error) {
+      console.error("Error deleting task:", error);
+    }
+  };  
+
+  const handleEdit = (task: Task) => {
+    setEditingTask(task);
+  };
+
+  const handleSaveEdit = async (updatedTask: Task) => {
+    try {
+      await axios.put(`/todos/${updatedTask.id}`, updatedTask);
+      setTasks(tasks.map(task => (task.id === updatedTask.id ? updatedTask : task)));
+      setEditingTask(null);
+      Swal.fire({
+        title: "Updated!",
+        text: "Your TODO has been updated successfully.",
+        icon: "success",
+        confirmButtonText: "OK"
+      });
+    } catch (error) {
+      console.error("Error updating task:", error);
+    }
+  };
+
   const paginatedTasks = tasks.slice((currentPage - 1) * TASKS_PER_PAGE, currentPage * TASKS_PER_PAGE);
   const totalPages = Math.ceil(tasks.length / TASKS_PER_PAGE);
 
   return (
     <div>
       <div className="max-w-2xl mx-auto px-2">
-        {/* table */}
         <Table>
           <TableHeader>
             <TableRow>
@@ -85,17 +135,18 @@ export default function TaskList() {
                     <DropdownMenuTrigger asChild>
                       <Button variant="outline"><CiMenuKebab /></Button>
                     </DropdownMenuTrigger>
-
                     <DropdownMenuContent>
-                      <DropdownMenuItem>
-                        <Link href={`/tasks/${task.id}`} className="text-blue-500">
-                          View
-                        </Link>
+                      <DropdownMenuItem 
+                        onClick={() => handleEdit(task)}
+                        className="flex items-center gap-2"
+                      >
+                        Edit <FaRegEdit />
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <Link href={`/tasks/${task.id}/edit`} className=" text-blue-500">
-                          Edit
-                        </Link>
+                      <DropdownMenuItem 
+                        onClick={() => handleDelete(task.id)}
+                        className="flex items-center gap-2"
+                      >
+                        Delete <MdDelete />
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -104,7 +155,6 @@ export default function TaskList() {
             ))}
           </TableBody>
         </Table>
-        {/* pagination */}
         <Pagination>
           <PaginationContent>
             <PaginationItem>
@@ -148,6 +198,12 @@ export default function TaskList() {
           </PaginationContent>
         </Pagination>
       </div>
+
+      <EditTaskModal
+        task={editingTask}
+        onSave={handleSaveEdit}
+        onClose={() => setEditingTask(null)}
+      />
     </div>
   );
 }
