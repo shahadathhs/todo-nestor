@@ -27,6 +27,9 @@ export const Nav = () => {
             <DropdownMenuItem>
               <Link href="/tasks" >Tasks</Link>
             </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href="/posts" >Posts</Link>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
 

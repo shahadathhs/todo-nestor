@@ -13,6 +13,15 @@ export default function Home() {
           Go to Task List
         </Link>
       </Button>
+      
+      <p className="text-xl my-8 text-center ">
+        You can read our posts too.
+      </p>
+      <Button variant="outline">
+        <Link href="/posts" >
+          Go to posts
+        </Link>
+      </Button>
     </div>
   );
 }
