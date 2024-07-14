@@ -7,6 +7,8 @@
 
 ## Live URL: <https://todonestor.vercel.app>
 
+## Video Presentation: [Google Drive](https://drive.google.com/file/d/1WIYaNDQXd0vLCl6NdiegxLuu4ZF2MGj8/view?usp=drive_link)
+
 ## Getting Started
 
 1. **Clone the repository:**
