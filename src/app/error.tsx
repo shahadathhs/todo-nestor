@@ -14,7 +14,7 @@ export default function Error({ error, reset }: ErrorProps) {
   }, [error]);
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center">
+    <div className="flex flex-col justify-center items-center">
       <h2 className='p-10 text-4xl font-bold '>An Error occurred!</h2>
       <Button
         onClick={reset}

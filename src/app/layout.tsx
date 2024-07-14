@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-// import { Inter } from "next/font/google";
 import "./globals.css";
 import { Inter as FontSans } from "next/font/google"
-
 import { cn } from "@/lib/utils"
 import { ThemeProvider } from "@/components/theme-provider";
+import { Footer } from "@/components/shared/Footer";
+import { Nav } from "@/components/shared/Nav";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -27,7 +27,7 @@ export default function RootLayout({
         <link rel="icon" href="/check-circle.png" />
       </head>
       <body className={cn(
-        "min-h-screen bg-background font-sans antialiased",
+        "min-h-screen flex flex-col justify-between overflow-x-hidden bg-background font-sans antialiased",
         fontSans.variable
       )}>
         <ThemeProvider
@@ -36,7 +36,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <Nav />
+          <main>{children}</main>
+          <Footer />
         </ThemeProvider>
       </body>
     </html>
